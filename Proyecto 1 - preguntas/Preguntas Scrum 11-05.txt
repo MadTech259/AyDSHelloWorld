@@ -1,26 +1,34 @@
 • Estructura general del proyecto:
-
+    - Existe un módulo (HomeControllerModule) que controla a los módulos (HomeModelModule y HomeViewModule). Éste se encarga de 
+        ver los eventos que ocurren (observer), y decidir que acción se tomará.
+        
+        HomeModelModule se encarga de manejar la Omdb API, y de administrar la base de datos SQLite con las peliculas que se almacenan
+        o se buscan. También se encarga de notificar a la GUI que hay que cambiar los datos de la peliula en la intefaz gráfica.
+        
+        HomeViewModule se encarga de mostrar la información de la pelicula al usuario, y de capturar los eventos generados por el usuario
+        y notificar al HomeControllerModule. 
 
 
 • Flujo de la información. Qué sucede desde que se hace click en search hasta que se muestran los datos en la UI:
-	- click en search (MainWindow)
-	- El subject notifica a todos los observadores que hagan update (Subject)
-	- Se activa el boton de mas detalles (MainWindow)
-	- 
-
+	- Cuando se hace click, HomeViewModule captura el evento del usuario y realiza un notify al HomeControllerModule con el nombre de la pelicula.
+	- El HomeControllerModule llama al HomeModelModule, indicandole que busque la pelicula que le fue pasada.
+	- El HomeModelModule busca la pelicula en el almacenamiento local, y si no la encuentra, la busca en la API Omdb (en este caso la guarda en
+	    el almacenamiento local), para luego enviarla al HomeViewModule.
+    - El HomeViewModule hace el update de los elementos de la interfaz gráfica a través del MovieDescriptionHelper.
+	
 
 • Cuál es la fuente de los datos. Qué información se obtiene de los servicios, cuáles se usan en el proyecto y cuales se ignoran:
 	- omdb api (http://www.omdbapi.com/) {
 		Titulo, Año, Trama, Director, Actores, Poster y Puntuación
 	}
 	- New York Times (api.nytimes.com) {
-	    Summary short, link[url], 
+	    Summary short, link[url], multimedia[src]
 	}
 	- SQlite (almacenamiento local)
 
 
 • Dónde y por qué se setea [*]:
-	- [*] Se setea en MovieDescriptionHelperImpl, mas presisamente en el titulo de la pelicula y se setea para indicar que la pelicula 
+	- [*] Se setea en MovieDescriptionHelperImpl, mas precisamente en el titulo de la pelicula y se setea para indicar que la pelicula 
 		se encuentra en el almacenamiento local.
 
 
