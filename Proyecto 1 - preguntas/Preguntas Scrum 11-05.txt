@@ -1,0 +1,56 @@
+• Estructura general del proyecto:
+
+
+
+• Flujo de la información. Qué sucede desde que se hace click en search hasta que se muestran los datos en la UI:
+	- click en search (MainWindow)
+	- El subject notifica a todos los observadores que hagan update (Subject)
+	- Se activa el boton de mas detalles (MainWindow)
+	- 
+
+
+• Cuál es la fuente de los datos. Qué información se obtiene de los servicios, cuáles se usan en el proyecto y cuales se ignoran:
+	- omdb api (http://www.omdbapi.com/) {
+		Titulo, Año, Trama, Director, Actores, Poster y Puntuación
+	}
+	- New York Times (api.nytimes.com) {
+	    Summary short, link[url], 
+	}
+	- SQlite (almacenamiento local)
+
+
+• Dónde y por qué se setea [*]:
+	- [*] Se setea en MovieDescriptionHelperImpl, mas presisamente en el titulo de la pelicula y se setea para indicar que la pelicula 
+		se encuentra en el almacenamiento local.
+
+
+• Imágenes por defecto: condiciones, fuente de la imagen:
+	- Imagen por defecto al inicio: (cockoo 1): https://springfieldfiles.com/albums/books/0374.JPG
+	- Imagen por defecto del poster (si no encuentra): https://i.picsum.photos/id/355/267/179.jpg 
+		(Si el JSON retorna con un poster, lo cambia, sino deja el poster por defecto)
+
+
+• Analizar los edge cases: movie no encontrada, falta de internet:
+	- Para pedir una pelicula desde una fuente externa, debemos llamar a la funcion getMovieFromExternalData de la clase
+		OmdbResponseToOmdbMovieresolverImpl. Si la pelicula no fue encontrada en (OmdbResponseToOmdbMovieresolverImpl) 
+		retornará falso en el JSON, por lo que la funcion retornara la pelicula por defecto definida en la clase OmdbMovie
+	- Si no hay internet, la app puede mostrar las peliculas que se encuentran en el almacenamiento local, pero no puede mostrar
+		los poster de estas peliculas, ya que solo almacena un link al poster de la pelicula.
+		Además no puede conseguir una pelicula que no este en el almacenamiento local, y la api de omdb lanza una excepcion que 
+		no esta capturada y manejada correctamente (UnknownHostException) ya que intenta conectarse a internet y no puede.		
+
+
+• Que librerı́as externas se utilizan:
+    - squareup retrofit2 v2.4.0
+    - squareup retrofit2 converter scalars v2.4.0
+    - squareup okhttp3 v3.10.0
+    - squareup okio v1.14.0
+    - hamcrest core v1.3
+    - google code gson v2.8.2
+    - sqlite jdbc v3.21.0
+	
+También se utilizan las siguientes api:
+	- Omdb API (no se si va)
+	- NYTimes API (no se si va)
+	
+	
